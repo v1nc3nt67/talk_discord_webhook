@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<info>
+    <id>talk_discord_webhook</id>
+    <name>Discord Webhooks for Talk</name>
+    <summary>Receive Discord-formatted webhooks in Nextcloud Talk</summary>
+    <description>Allows external services (like GitHub, GitLab, etc.) to post messages to Nextcloud Talk conversations using Discord-compatible webhooks.</description>
+    <version>1.0.0</version>
+    <licence>agpl</licence>
+    <author>Vincent Blais</author>
+    <namespace>TalkDiscordWebhook</namespace>
+    <category>social</category>
+    <dependencies>
+        <nextcloud min-version="25" max-version="30"/>
+        <app min-version="14.0.0">spreed</app>
+    </dependencies>
+    <settings>
+        <personal>OCA\TalkDiscordWebhook\Settings\PersonalSection</personal>
+    </settings>
+</info>
