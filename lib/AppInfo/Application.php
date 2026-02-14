@@ -21,7 +21,8 @@ class Application extends App implements IBootstrap
 
     public function register(IRegistrationContext $context): void
     {
-    // Register items if needed
+        $context->registerFlowProvider(DiscordWebhookEntity::class);
+        $context->registerFlowProvider(SendDiscordToTalkOperation::class);
     }
 
     public function boot(IBootContext $context): void

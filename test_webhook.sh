@@ -2,7 +2,13 @@
 
 # Configuration
 NC_URL="http://localhost/nextcloud" # Change this
-WEBHOOK_TOKEN="REPLACE_WITH_TOKEN"
+WEBHOOK_TOKEN="my-secret-token" # Match this in your Flow configuration
+
+echo "Pre-requisite: Configure a Flow in Nextcloud:"
+echo "  Trigger: Discord Webhook"
+echo "  Condition: Token matches '$WEBHOOK_TOKEN'"
+echo "  Action: Send to Talk (Discord Format) -> [Your Room Token]"
+echo ""
 
 # Simple Message
 echo "Sending simple message..."

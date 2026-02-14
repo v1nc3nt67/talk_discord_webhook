@@ -10,8 +10,9 @@
     <namespace>TalkDiscordWebhook</namespace>
     <category>social</category>
     <dependencies>
-        <nextcloud min-version="25" max-version="30"/>
-        <app min-version="14.0.0">spreed</app>
+        <nextcloud min-version="25" max-version="32"/>
+        <app min-version="22.0.0">spreed</app>
+        <app min-version="22.0.0">workflowengine</app>
     </dependencies>
     <settings>
         <personal>OCA\TalkDiscordWebhook\Settings\PersonalSection</personal>
