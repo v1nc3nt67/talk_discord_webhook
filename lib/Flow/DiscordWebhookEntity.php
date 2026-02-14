@@ -6,8 +6,8 @@ declare(strict_types = 1)
 namespace OCA\TalkDiscordWebhook\Flow;
 
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\EventDispatcher\Event;
 use OCP\WorkflowEngine\IEntity;
-use OCP\WorkflowEngine\IEntityEvent;
 use OCP\WorkflowEngine\IRuleMatcher;
 use OCP\IL10n;
 
@@ -63,16 +63,16 @@ class DiscordWebhookEntity implements IEntity
         return false;
     }
 
-    /** @var IEntityEvent|null */
+    /** @var Event|null */
     protected $currentEvent;
 
-    public function prepareRuleMatcher(IRuleMatcher $ruleMatcher, string $eventName, IEntityEvent $event): void
+    public function prepareRuleMatcher(IRuleMatcher $ruleMatcher, string $eventName, Event $event): void
     {
         $this->currentEvent = $event;
         $ruleMatcher->setEntity($this);
     }
 
-    public function getCurrentEvent(): ?IEntityEvent
+    public function getCurrentEvent(): ?Event
     {
         return $this->currentEvent;
     }

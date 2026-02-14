@@ -11,6 +11,7 @@ use OCP\WorkflowEngine\IOperation;
 use OCP\WorkflowEngine\IRuleMatcher;
 use OCP\Talk\IBroker;
 use OCA\TalkDiscordWebhook\Flow\DiscordWebhookEntity;
+use OCP\EventDispatcher\Event;
 
 class SendDiscordToTalkOperation implements IOperation
 {
