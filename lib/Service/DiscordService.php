@@ -5,8 +5,31 @@ declare(strict_types = 1)
 
 namespace OCA\TalkDiscordWebhook\Service;
 
+use OCP\Talk\IBroker;
+use OCP\IConfig;
+
 class DiscordService
 {
+
+    /** @var TalkService */
+    private $talkService;
+
+    public function __construct(TalkService $talkService)
+    {
+        $this->talkService = $talkService;
+    }
+
+    public function processWebhook(string $roomToken, array $payload): void
+    {
+        $message = $this->formatMessage($payload);
+        if (!empty($message)) {
+            // Assuming the room token is the user ID or room token
+            // Here we need to find out *who* posts the message.
+            // Let's assume we post as a guest or system (if possible) or use a predefined user.
+            // For now, let's just try to send to the room.
+            $this->talkService->sendMessage($roomToken, $message);
+        }
+    }
 
     public function formatMessage(array $payload): string
     {

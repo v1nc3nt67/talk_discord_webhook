@@ -9,6 +9,11 @@ use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCA\TalkDiscordWebhook\Flow\DiscordWebhookEntity;
+use OCA\TalkDiscordWebhook\Flow\SendDiscordToTalkOperation;
+use OCP\EventDispatcher\IEventDispatcher;
+use OCP\WorkflowEngine\Events\RegisterEntitiesEvent;
+use OCP\WorkflowEngine\Events\RegisterOperationsEvent;
 
 class Application extends App implements IBootstrap
 {
@@ -21,12 +26,21 @@ class Application extends App implements IBootstrap
 
     public function register(IRegistrationContext $context): void
     {
-        $context->registerFlowProvider(DiscordWebhookEntity::class);
-        $context->registerFlowProvider(SendDiscordToTalkOperation::class);
     }
 
     public function boot(IBootContext $context): void
     {
-    // Boot logic
+        /** @var IEventDispatcher $dispatcher */
+        $dispatcher = $context->getServerContainer()->get(IEventDispatcher::class);
+
+        $dispatcher->addListener(RegisterEntitiesEvent::class , function (RegisterEntitiesEvent $event) use ($context) {
+            $entity = $context->getServerContainer()->get(DiscordWebhookEntity::class);
+            $event->registerEntity($entity);
+        });
+
+        $dispatcher->addListener(RegisterOperationsEvent::class , function (RegisterOperationsEvent $event) use ($context) {
+            $operation = $context->getServerContainer()->get(SendDiscordToTalkOperation::class);
+            $event->registerOperation($operation);
+        });
     }
 }

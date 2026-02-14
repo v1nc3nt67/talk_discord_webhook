@@ -7,6 +7,24 @@ This app allows you to create webhooks that accept Discord-formatted JSON payloa
 1.  Place this directory (`talk_discord_webhook`) into your Nextcloud `apps/` directory.
 2.  Enable the app via `occ app:enable talk_discord_webhook`.
 
+## Updating from GitHub
+
+If you installed via Git:
+
+1.  Navigate to the app directory:
+    ```bash
+    cd /var/www/nextcloud/apps/talk_discord_webhook
+    ```
+2.  Pull the latest changes:
+    ```bash
+    git pull origin main
+    ```
+
+If you installed manually via ZIP:
+
+1.  Download the latest release ZIP.
+2.  Replace the existing `talk_discord_webhook` folder in `apps/`.
+
 ## Usage via Nextcloud Flow
 
 1.  Go to **Settings > Flow** (Administration or Personal).

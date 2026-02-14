@@ -8,6 +8,8 @@ namespace OCA\TalkDiscordWebhook\Flow;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\WorkflowEngine\IEntity;
 use OCP\WorkflowEngine\IEntityEvent;
+use OCP\WorkflowEngine\IRuleMatcher;
+use OCP\IL10n;
 
 class DiscordWebhookEntity implements IEntity
 {
@@ -22,6 +24,16 @@ class DiscordWebhookEntity implements IEntity
     public function getID(): string
     {
         return 'talk_discord_webhook';
+    }
+
+    public function getDisplayName(): string
+    {
+        return $this->getName();
+    }
+
+    public function getEntityId(): string
+    {
+        return $this->getID();
     }
 
     public function getName(): string
@@ -41,14 +53,27 @@ class DiscordWebhookEntity implements IEntity
         ];
     }
 
-    public function prepareRuleMatcher(IEntityEvent $event, $subject, array $data): void
+    public function isLegitimatedForUserId(string $userId): bool
     {
-    // This is called when the event is triggered, to setup checks
-    // For example, we could check the "Token"
+        return true;
     }
 
     public function isDeprecatingEvents(): bool
     {
         return false;
+    }
+
+    /** @var IEntityEvent|null */
+    protected $currentEvent;
+
+    public function prepareRuleMatcher(IRuleMatcher $ruleMatcher, string $eventName, IEntityEvent $event): void
+    {
+        $this->currentEvent = $event;
+        $ruleMatcher->setEntity($this);
+    }
+
+    public function getCurrentEvent(): ?IEntityEvent
+    {
+        return $this->currentEvent;
     }
 }
