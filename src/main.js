@@ -5,6 +5,17 @@
 import WebhookSettings from './views/WebhookSettings.vue'
 import MinimalTest from "./views/MinimalTest.vue";
 import { subscribe } from '@nextcloud/event-bus'
+import * as NextcloudEventBus from '@nextcloud/event-bus';
+
+// Save the original emit function
+const originalEmit = NextcloudEventBus.emit;
+
+// Override the emit function with custom logging
+NextcloudEventBus.emit = (type, data) => {
+    console.log(`Event Fired: ${type}`, data);
+    // Call the original emit function
+    originalEmit(type, data);
+};
 
 subscribe('spreed:conversation:open', (data) => {
     console.log('Conversation opened:', data.token);
