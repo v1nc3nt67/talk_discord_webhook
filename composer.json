@@ -1,0 +1,39 @@
+{
+  "name": "v1nc3nt67/talk_discord_webhook",
+  "authors": [
+    {
+      "name": "Vincent Blais",
+      "email": "v.blais67@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "OCA\\TalkDiscordWebhook\\": "lib/"
+    }
+  },
+  "require": {
+    "php": "^8.2",
+    "ext-apcu": "*",
+    "ext-ctype": "*",
+    "ext-curl": "*",
+    "ext-dom": "*",
+    "ext-fileinfo": "*",
+    "ext-gd": "*",
+    "ext-json": "*",
+    "ext-libxml": "*",
+    "ext-mbstring": "*",
+    "ext-openssl": "*",
+    "ext-pdo": "*",
+    "ext-posix": "*",
+    "ext-session": "*",
+    "ext-simplexml": "*",
+    "ext-xml": "*",
+    "ext-xmlreader": "*",
+    "ext-xmlwriter": "*",
+    "ext-zip": "*",
+    "ext-zlib": "*"
+  },
+  "require-dev": {
+    "nextcloud/ocp": "^32.0"
+  }
+}

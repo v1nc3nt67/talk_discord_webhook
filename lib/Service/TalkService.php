@@ -1,50 +1,83 @@
 <?php
 
-declare(strict_types = 1)
-;
+declare(strict_types=1);
 
 namespace OCA\TalkDiscordWebhook\Service;
 
-use OCP\Talk\IBroker;
+use OCP\Http\Client\IClientService;
 use OCP\IConfig;
+use OCP\IUserSession;
+use Psr\Log\LoggerInterface;
 
-class TalkService
-{
-    private IBroker $talkBroker;
+class TalkService {
 
-    public function __construct(IBroker $talkBroker)
-    {
-        $this->talkBroker = $talkBroker;
+    private IClientService $clientService;
+    private IConfig $config;
+    private LoggerInterface $logger;
+
+    public function __construct(
+        IClientService $clientService,
+        IConfig $config,
+        LoggerInterface $logger
+    ) {
+        $this->clientService = $clientService;
+        $this->config = $config;
+        $this->logger = $logger;
     }
 
-    public function sendMessage(string $roomToken, string $message, string $actor = 'Discord Webhook'): void
-    {
-    // Implementation might vary based on exact IBroker version, 
-    // but generally involves finding the conversation and posting a message.
-    // Since we are external, we might not have a session user.
-    // We might need to use a system user or a specific bot user if available, 
-    // OR the IBroker allows posting as a guest/system.
+    /**
+     * Send a message to a Nextcloud Talk conversation via the OCS API.
+     *
+     * @param string $conversationToken The Talk conversation token
+     * @param string $message The message content
+     * @param string $userId The user ID on whose behalf the message is sent
+     * @throws \Exception If the request fails
+     */
+    public function sendMessage(string $conversationToken, string $message, string $userId): void {
+        $baseUrl = $this->config->getSystemValueString('overwrite.cli.url', '');
 
-    // For this implementation, we will assume we can post using the broker directly 
-    // or we need to act as a specific user (the creator of the webhook).
+        if (empty($baseUrl)) {
+            // Fallback: try to build from trusted domains
+            $trustedDomains = $this->config->getSystemValue('trusted_domains', []);
+            if (!empty($trustedDomains)) {
+                $baseUrl = 'https://' . $trustedDomains[0];
+            }
+        }
 
-    // Wait, IBroker often requires a participant. 
-    // If we want to simulate a "bot", we might need to use 'system' message or similar, 
-    // but 'system' messages are special.
+        if (empty($baseUrl)) {
+            throw new \RuntimeException(
+                'Cannot determine Nextcloud base URL. Please set overwrite.cli.url in config.php'
+            );
+        }
 
-    // A common pattern is to use the user who created the webhook as the sender,
-    // or a dedicated bot user. The webhook entity has `user_id`.
+        $baseUrl = rtrim($baseUrl, '/');
+        $endpoint = $baseUrl . '/ocs/v2.php/apps/spreed/api/v1/chat/' . $conversationToken;
 
-    // Let's assume we pass the userId to this service method in a real scenario,
-    // but for now let's stick to the signature.
-    }
+        $client = $this->clientService->newClient();
 
-    public function sendMessageAsUser(string $roomToken, string $message, string $userId): void
-    {
-        // This is a more realistic usage for NC Talk integration
-        $conversation = $this->talkBroker->getConversation($roomToken);
-        if ($conversation) {
-            $this->talkBroker->createMessage($conversation, $message, $userId);
+        $response = $client->post($endpoint, [
+            'headers' => [
+                'OCS-APIRequest' => 'true',
+                'Content-Type'   => 'application/json',
+                'Accept'         => 'application/json',
+            ],
+            'auth' => [$userId, ''],
+            'json' => [
+                'message' => $message,
+            ],
+            // Use internal request to bypass auth when running server-side
+            'nextcloud' => [
+                'allow_local_address' => true,
+            ],
+        ]);
+
+        $statusCode = $response->getStatusCode();
+        if ($statusCode < 200 || $statusCode >= 300) {
+            $this->logger->error('Talk API returned status ' . $statusCode, [
+                'app' => 'talk_discord_webhook',
+                'response' => $response->getBody(),
+            ]);
+            throw new \RuntimeException('Talk API returned HTTP ' . $statusCode);
         }
     }
 }

@@ -2,11 +2,33 @@
 
 return [
     'routes' => [
-        // Public Webhook Endpoint
+        // Public webhook endpoint (no auth required)
         [
-            'name' => 'webhook#handle',
-            'url' => '/api/v1/webhook/{token}',
-            'verb' => 'POST'
+            'name' => 'webhook#receive',
+            'url'  => '/api/v1/webhook/{token}',
+            'verb' => 'POST',
         ],
-    ]
+        // Admin/user endpoints for managing webhooks
+        [
+            'name' => 'webhook#create',
+            'url'  => '/api/v1/webhooks',
+            'verb' => 'POST',
+        ],
+        [
+            'name' => 'webhook#index',
+            'url'  => '/api/v1/webhooks',
+            'verb' => 'GET',
+        ],
+        // List webhooks for a specific conversation
+        [
+            'name' => 'webhook#listByConversation',
+            'url'  => '/api/v1/webhooks/conversation/{conversationToken}',
+            'verb' => 'GET',
+        ],
+        [
+            'name' => 'webhook#delete',
+            'url'  => '/api/v1/webhooks/{id}',
+            'verb' => 'DELETE',
+        ],
+    ],
 ];
