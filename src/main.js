@@ -18,11 +18,11 @@ NextcloudEventBus.emit = (type, data) => {
 };
 
 subscribe('spreed:conversation:open', (data) => {
-    console.log('Conversation opened:', data.token);
+    console.log('Conversation opened:', data);
     // Logic to inject your settings or UI elements here
 })
 
-console.log(subscribe);
+console.log(NextcloudEventBus);
 
 document.addEventListener('DOMContentLoaded', () => {
     if (!window.OCA?.Talk?.Settings?.registerSection) {
