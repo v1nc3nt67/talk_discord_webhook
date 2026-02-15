@@ -19,6 +19,10 @@ subscribe('spreed:conversation:open', (data) => {
     console.log('Conversation opened:', data);
     // Logic to inject your settings or UI elements here
 })
+subscribe('spreed:conversation:update', (data) => {
+    console.log('Conversation updated:', data);
+    // Logic to inject your settings or UI elements here
+})
 subscribe('spreed:sidebar:tab:change', (data) => {
     console.log('Conversation change:', data);
     // Logic to inject your settings or UI elements here
